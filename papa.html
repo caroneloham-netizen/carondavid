@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DAVID CARON | Élixirs & Minéraux</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- VARIABLES & AMBIANCE --- */
+        :root {
+            --bg-body: #F9F8F6; /* Crème papier d'art */
+            --bg-card: #FFFFFF;
+            --text-main: #1C1C1E; /* Noir très doux */
+            --text-muted: #6e6e73;
+            --accent: #2A3B2A; /* Vert Forêt Sombre (Nature/Profondeur) */
+            --gold: #C5A059; /* Or Mat (Touche Premium) */
+            
+            --font-title: 'Playfair Display', serif;
+            --font-body: 'Lato', sans-serif;
+            
+            --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        /* --- RESET --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.8;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* --- NAVIGATION --- */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1.5rem 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(249, 248, 246, 0.95);
+            backdrop-filter: blur(12px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0,0,0,0.03);
+        }
+
+        .brand {
+            font-family: var(--font-title);
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--text-main);
+            cursor: pointer;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links li button {
+            background: none;
+            border: none;
+            font-family: var(--font-body);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: color 0.3s ease;
+            position: relative;
+            padding-bottom: 5px;
+        }
+
+        .nav-links li button.active, .nav-links li button:hover {
+            color: var(--accent);
+        }
+        
+        .nav-links li button.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background-color: var(--gold);
+        }
+
+        /* --- LAYOUT GLOBAL --- */
+        main { padding-top: 100px; min-height: 100vh; }
+
+        section {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        section.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- TYPOGRAPHIE --- */
+        h1, h2, h3 { font-family: var(--font-title); color: var(--accent); }
+        
+        h1 {
+            font-size: 3.5rem;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+        
+        h2 { font-size: 2.5rem; margin-bottom: 1rem; }
+        
+        p { margin-bottom: 1.5rem; font-weight: 300; font-size: 1.05rem; }
+
+        .subtitle {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--gold);
+            display: block;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            font-family: var(--font-body);
+        }
+
+        /* --- COMPONENTS --- */
+        .btn {
+            display: inline-block;
+            padding: 15px 40px;
+            background-color: var(--accent);
+            color: white;
+            text-decoration: none;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            border: 1px solid var(--accent);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: transparent;
+            color: var(--accent);
+        }
+
+        /* --- PAGE ACCUEIL SPECIFIC (BIOGRAPHIE) --- */
+        .bio-hero {
+            display: flex;
+            align-items: center;
+            gap: 4rem;
+            min-height: 80vh;
+        }
+
+        .bio-image-wrapper {
+            flex: 1;
+            position: relative;
+        }
+
+        /* Image placeholder pour David Caron */
+        .bio-img {
+            width: 100%;
+            height: 600px;
+            object-fit: cover;
+            border-radius: 4px; /* Très légèrement arrondi */
+            filter: grayscale(10%) contrast(95%);
+        }
+
+        .bio-content {
+            flex: 1;
+            padding-right: 2rem;
+        }
+
+        .signature {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.5rem;
+            margin-top: 2rem;
+            color: var(--text-main);
+        }
+
+        /* Section "Mes Créations" sur l'accueil */
+        .home-products {
+            margin-top: 6rem;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            padding-top: 4rem;
+        }
+
+        .home-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        /* --- CARDS PRODUITS (Generic) --- */
+        .card {
+            background: white;
+            padding: 0;
+            transition: transform 0.4s ease;
+            cursor: pointer;
+        }
+
+        .card:hover { transform: translateY(-5px); }
+
+        .card-img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-info { padding: 0 1rem 1.5rem 1rem; text-align: center; }
+
+        .card-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+        }
+
+        .card-price {
+            font-family: var(--font-body);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* --- CONTACT FORM (Page Divers) --- */
+        .contact-box {
+            background: white;
+            padding: 4rem;
+            max-width: 700px;
+            margin: 0 auto;
+            border: 1px solid #eee;
+        }
+        
+        input, textarea {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #ddd;
+            margin-bottom: 20px;
+            font-family: inherit;
+            background: #FAFAFA;
+        }
+        
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--gold);
+            background: white;
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 900px) {
+            .bio-hero { flex-direction: column; }
+            .home-grid { grid-template-columns: 1fr; }
+            .nav-links { display: none; }
+            nav { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="brand" onclick="switchPage('home')">David Caron</div>
+        <ul class="nav-links">
+            <li><button onclick="switchPage('home')" id="nav-home" class="active">Accueil</button></li>
+            <li><button onclick="switchPage('elixirs')" id="nav-elixirs">Élixirs</button></li>
+            <li><button onclick="switchPage('mineraux')" id="nav-mineraux">Minéraux</button></li>
+            <li><button onclick="switchPage('formation')" id="nav-formation">Formation</button></li>
+            <li><button onclick="switchPage('divers')" id="nav-divers">Divers</button></li>
+        </ul>
+    </nav>
+
+    <main>
+
+        <section id="home" class="active">
+            <div class="bio-hero">
+                <div class="bio-content">
+                    <span class="subtitle">Depuis 1999</span>
+                    <h1>L'Artisan du Vivant</h1>
+                    <p>
+                        Je m'appelle <strong>David Caron</strong>. Depuis 25 ans, je dédie ma vie à l'écoute silencieuse de la nature. Mon parcours ne s'est pas fait dans les laboratoires aseptisés, mais les mains dans la terre, au cœur des forêts et des jardins de plantes médicinales.
+                    </p>
+                    <p>
+                        Contrairement aux productions industrielles, je crée <strong>mes propres élixirs floraux</strong>. Je sélectionne personnellement chaque fleur sauvage au moment précis de sa pleine vibration. Cette méthode artisanale, lente et respectueuse, permet de capturer l'âme de la plante pour en restituer toute la puissance émotionnelle.
+                    </p>
+                    <p>
+                        Ma démarche est une quête d'authenticité : relier la sagesse minérale des pierres à la délicatesse florale pour accompagner votre chemin intérieur.
+                    </p>
+                    <div class="signature">David Caron</div>
+                </div>
+                
+                <div class="bio-image-wrapper">
+                    <img src="https://images.unsplash.com/photo-1599579085809-5a9e34c9c7f6?q=80&w=2069&auto=format&fit=crop" class="bio-img" alt="David Caron travaillant avec la nature">
+                </div>
+            </div>
+
+            <div class="home-products">
+                <div style="text-align: center; margin-bottom: 3rem;">
+                    <span class="subtitle">Sélection de l'Artisan</span>
+                    <h2>Mes Créations Signatures</h2>
+                </div>
+                
+                <div class="home-grid">
+                    <div class="card" onclick="switchPage('elixirs')">
+                        <img src="https://images.unsplash.com/photo-1615339726185-3b15b3c53327?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" class="card-img" alt="Elixir">
+                        <div class="card-info">
+                            <h3 class="card-title">Élixir "Renaissance"</h3>
+                            <p class="card-price">Création Originale</p>
+                        </div>
+                    </div>
+                    <div class="card" onclick="switchPage('mineraux')">
+                        <img src="https://images.unsplash.com/photo-1618331835717-801e976710b2?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" class="card-img" alt="Pierre">
+                        <div class="card-info">
+                            <h3 class="card-title">Géode Améthyste</h3>
+                            <p class="card-price">Sélection Personnelle</p>
+                        </div>
+                    </div>
+                    <div class="card" onclick="switchPage('elixirs')">
+                        <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" class="card-img" alt="Preparation">
+                        <div class="card-info">
+                            <h3 class="card-title">Complexe "Sérénité"</h3>
+                            <p class="card-price">Fleurs de Bach</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="elixirs">
+            <div style="text-align: center; margin-bottom: 4rem;">
+                <span class="subtitle">Vibration Florale</span>
+                <h2>Mes Élixirs & Fleurs de Bach</h2>
+                <p style="max-width: 600px; margin: 0 auto;">Chaque flacon est le fruit d'une préparation manuelle, respectant les cycles solaires et lunaires pour garantir une intégrité énergétique absolue.</p>
+            </div>
+            
+            <div class="home-grid">
+                <div class="card">
+                    <img src="https://images.unsplash.com/photo-1629198688000-71f23e745b6e?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" class="card-img" alt="Elixir 1">
+                    <div class="card-info">
+                        <h3 class="card-title">Urgence Émotionnelle</h3>
+                        <p class="card-price">22,00 €</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <img src="https://images.unsplash.com/photo-1601049541289-9b1b7bbbfe19?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" class="card-img" alt="Elixir 2">
+                    <div class="card-info">
+                        <h3 class="card-title">Sommeil Réparateur</h3>
+                        <p class="card-price">24,00 €</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <img src="https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&w=800&q=80" class="card-img" alt="Elixir 3">
+                    <div class="card-info">
+                        <h3 class="card-title">Confiance en Soi</h3>
+                        <p class="card-price">22,00 €</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="mineraux">
+            <div style="text-align: center; margin-bottom: 4rem;">
+                <span class="subtitle">Lithothérapie</span>
+                <h2>L'Âme des Pierres</h2>
+                <p style="max-width: 600px; margin: 0 auto;">Je choisis mes pierres une par une. Je ne cherche pas la perfection visuelle industrielle, mais la puissance vibratoire que seule la nature brute peut offrir.</p>
+            </div>
+
+            <div class="home-grid">
+                <div class="card">
+                    <img src="https://images.unsplash.com/photo-1596464716127-f2a82984de30?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" class="card-img" alt="Cristal">
+                    <div class="card-info">
+                        <h3 class="card-title">Pointe Cristal de Roche</h3>
+                        <p class="card-price">45,00 €</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <img src="https://images.unsplash.com/photo-1567157577867-05ccb738daa6?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" class="card-img" alt="Rose">
+                    <div class="card-info">
+                        <h3 class="card-title">Quartz Rose Brut</h3>
+                        <p class="card-price">30,00 €</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="formation">
+            <div style="display: flex; align-items: center; gap: 3rem;">
+                <div style="flex: 1;">
+                    <span class="subtitle">Partage de Connaissances</span>
+                    <h2>Transmettre le Vivant</h2>
+                    <p>Après 25 ans de pratique, il est temps pour moi de transmettre. Mes formations ne sont pas de simples cours théoriques, mais des initiations à la lecture sensible de la nature.</p>
+                    <ul style="list-style: none; margin-bottom: 2rem; padding-left: 1rem; border-left: 2px solid var(--gold);">
+                        <li style="margin-bottom: 1rem;"><strong>Atelier 1 :</strong> Fabriquer son propre élixir (Solaire & Lunaire).</li>
+                        <li style="margin-bottom: 1rem;"><strong>Atelier 2 :</strong> Ressentir l'énergie des pierres.</li>
+                    </ul>
+                    <button class="btn">Voir le calendrier</button>
+                </div>
+                <div style="flex: 1;">
+                    <img src="https://images.unsplash.com/photo-1544367563-12123d8d3f47?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" style="width: 100%; border-radius: 4px;" alt="Formation">
+                </div>
+            </div>
+        </section>
+
+        <section id="divers">
+            <div style="text-align: center; margin-bottom: 3rem;">
+                <h2>Contact & Divers</h2>
+                <p>Pour une consultation personnalisée avec David Caron ou toute autre demande.</p>
+            </div>
+            
+            <div class="contact-box">
+                <form>
+                    <label style="font-size: 0.8rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem; display: block;">Votre Nom</label>
+                    <input type="text" placeholder="Entrez votre nom">
+                    
+                    <label style="font-size: 0.8rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem; display: block;">Votre Email</label>
+                    <input type="email" placeholder="Entrez votre email">
+                    
+                    <label style="font-size: 0.8rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem; display: block;">Message</label>
+                    <textarea rows="5" placeholder="Comment puis-je vous aider ?"></textarea>
+                    
+                    <button type="button" class="btn" style="width: 100%;">Envoyer</button>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <footer style="background: #1C1C1E; color: white; padding: 4rem 2rem; text-align: center; margin-top: 4rem;">
+        <h3 style="color: white; font-size: 1.5rem; margin-bottom: 1rem;">DAVID CARON</h3>
+        <p style="opacity: 0.5; font-size: 0.9rem;">Nature, Science & Spiritualité.</p>
+        <p style="opacity: 0.3; font-size: 0.8rem; margin-top: 2rem;">&copy; 2024 David Caron. Tous droits réservés.</p>
+    </footer>
+
+    <script>
+        function switchPage(pageId) {
+            // 1. Scroll top doux
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // 2. Gestion classes Nav
+            document.querySelectorAll('.nav-links button').forEach(btn => btn.classList.remove('active'));
+            const activeBtn = document.getElementById('nav-' + pageId);
+            if(activeBtn) activeBtn.classList.add('active');
+
+            // 3. Gestion Sections
+            const currentActive = document.querySelector('section.active');
+            const newActive = document.getElementById(pageId);
+
+            if(currentActive && currentActive !== newActive) {
+                // Fade out
+                currentActive.style.opacity = 0;
+                currentActive.style.transform = "translateY(20px)";
+                
+                setTimeout(() => {
+                    currentActive.classList.remove('active');
+                    if(newActive) {
+                        newActive.classList.add('active');
+                        // Petit délai pour permettre le display:block de s'appliquer avant l'opacité
+                        requestAnimationFrame(() => {
+                            newActive.style.opacity = 1;
+                            newActive.style.transform = "translateY(0)";
+                        });
+                    }
+                }, 400); // Correspond à la transition CSS
+            } else if (!currentActive && newActive) {
+                // Premier chargement ou cas rare
+                newActive.classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>
